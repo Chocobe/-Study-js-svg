@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+  <html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document</title>
+
+    <link type="text/css" rel="stylesheet" href="./mySvgZoom.css" />
+  </head>
+
+  <body>
+    <div id="app">
+      <header class="header">
+        <h1>SVG Zoom 구현해 보기</h1>
+      </header>
+
+      <div class="transformInfo">
+        <p class="scaleX">scaleX: -</p>
+        <p class="scaleY">scaleY: -</p>
+        <p class="translateX">translateX: -</p>
+        <p class="translateY">translateY: -</p>
+        <p class="clientX">clientX: -</p>
+        <p class="clientY">clientY: -</p>
+      </div>
+
+      <div class="container">
+        <svg
+          width="100%"
+          height="100%"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+        </svg>
+      </div>
+    </div>
+
+    <script type="module" src="mySvgZoom.js"></script>
+  </body>
+</html>
