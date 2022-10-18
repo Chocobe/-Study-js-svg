@@ -35,6 +35,10 @@ body {
   background-color: rgb(30, 30, 30);
 }
 
+.transformInfo > * {
+  pointer-events: none;
+}
+
 .transformInfo * + *:nth-child(odd) {
   margin-top: 10px;
 }

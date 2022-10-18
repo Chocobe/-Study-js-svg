@@ -1,8 +1,7 @@
-/**
- * @param { string } svgSelector
- */
-const initSvgGrid = svgSelector => {
-  const $svg = document.querySelector(svgSelector);
+// @ts-check
+
+/** @param { SVGSVGElement } $svg */
+const initSvgGrid = $svg => {
   const { 
     width: svgWidth, 
     height: svgHeight,
@@ -11,12 +10,21 @@ const initSvgGrid = svgSelector => {
   const generateLines = generateLinesHOF($svg);
 
   // 세로선
-  generateLines(svgWidth, x => [[x, 0], [x, svgHeight]]);
+  generateLines(svgWidth, x => [[`${x}`, '0'], [`${x}`, `${svgHeight}`]]);
   // 가로선
-  generateLines(svgHeight, y => [[0, y], [svgWidth, y]]);
+  generateLines(svgHeight, y => [['0', `${y}`], [`${svgWidth}`, `${y}`]]);
 };
 
+/**
+ * @param { SVGSVGElement } $svg
+ * @returns {(
+ *  axisSize: number,
+ *  valueToPositionCallback: (pxValue: string) => string[][]
+ * ) => void}
+ */
 const generateLinesHOF = $svg => (axisSize, valueToPositionCallback) => {
+  const $svgGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  
   const lines = Array.from(
     { length: Math.floor(axisSize / 100) + 1 },
     (_, i) => `${i * 100}px`
@@ -34,7 +42,9 @@ const generateLinesHOF = $svg => (axisSize, valueToPositionCallback) => {
 
       return $line
     })
-    .forEach($line => $svg.appendChild($line));
+    .forEach($line => $svgGroup.appendChild($line));
+
+  $svg.appendChild($svgGroup);
 };
 
 export default initSvgGrid;

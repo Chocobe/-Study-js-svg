@@ -1,33 +1,64 @@
+// @ts-check
+
 import initSvgGrid from "./svgGrid.js";
 import ShapeFactory from "./ShapeFactory.js";
+import initController from "./controller.js";
 
+import "./types.js";
+import { querySelector } from "./utils.js";
+import { svgShapeInfos } from "./constants.js";
+
+/**
+ * @param { string } svgSelector 
+ */
 const initMySvgZoom = (svgSelector) => {
-  initSvgGrid(svgSelector);
+  /** @type { SVGSVGElement | null } */
+  const $svg = document.querySelector(svgSelector);
 
-  const shapeFactory = ShapeFactory(svgSelector);
+  if (!$svg) throw new Error(`${svgSelector} 요소를 찾지 못하였습니다.`);
 
-  const $leftBox = shapeFactory.initSvgBox({
-    x: 100,
-    y: 100,
-    width: 100,
-    height: 100,
-    fill: "#ff1493",
-  });
+  // Init State
+  /** @type { HTMLElement | null } */
+  const $container = querySelector(".container");
 
-  const $circle = shapeFactory.initSvgCircle({
-    centerX: 300,
-    centerY: 200,
-    radius: 100,
-    fill: "#03a9f4",
-  });
+  if (!$container) throw new Error(".container 요소를 찾지 못하였습니다.");
+  
+  const { top, left, width, height } = $container.getBoundingClientRect();
 
-  const $rightBox = shapeFactory.initSvgBox({
-    x: 400,
-    y: 100,
-    width: 50,
-    height: 50,
-    fill: "#f0f400",
-  });
+  /** @type { State } */
+  const state = {
+    containerSize: { 
+      top, left, width, height 
+    },
+    scale: { 
+      x: 1, y: 1 
+    },
+    translate: { 
+      x: 0, y: 0 
+    },
+    startPosition: {
+      x: 0, y: 0,
+    },
+    moveDistance: { 
+      x: 0, y: 0 
+    },
+    isMoveMode: false,
+  };
+
+  // Init Grid
+  initSvgGrid($svg);
+
+  // Init Shapes
+  const $svgGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+
+  const shapeFactory = ShapeFactory($svg);
+  const shapes = svgShapeInfos.map(info => shapeFactory[`createSvg${info.type}`]?.({...info}))
+  shapes.forEach($shape => $svgGroup.appendChild($shape));
+
+  $svg.appendChild($svgGroup);
+  
+  // Init Controller
+  initController(state, $svgGroup, $container);
 };
 
 initMySvgZoom(".container svg");
